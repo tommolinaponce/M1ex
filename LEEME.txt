@@ -1,0 +1,22 @@
+VISOR MOLECULAR 3D + REALIDAD AUMENTADA
+
+Contenido:
+- index.html: página del visor.
+- molecula.glb: tu modelo exportado desde ChimeraX.
+
+PRUEBA LOCAL
+No abras index.html con doble clic para comprobar el modelo: los navegadores pueden bloquear la carga local del GLB. Publicá ambos archivos juntos en un alojamiento web HTTPS.
+
+PUBLICACIÓN GRATUITA CON GITHUB PAGES
+1. Iniciá sesión en GitHub y creá un repositorio nuevo.
+2. Subí index.html y molecula.glb a la raíz del repositorio.
+3. En Settings > Pages, habilitá la publicación desde la rama principal (main), carpeta /(root).
+4. Esperá a que GitHub Pages publique el sitio y abrí la URL HTTPS que te indique.
+5. Probá la página en un celular. En Android, usá Chrome; en iPhone, Safari.
+6. Generá un QR que apunte a la URL publicada.
+
+NOTAS
+- El visor 3D usa model-viewer desde un CDN, por lo que necesita conexión a Internet.
+- La realidad aumentada depende de la compatibilidad del dispositivo/navegador.
+- Se configuró una escala inicial AR de 0.003 para probar una molécula de aproximadamente 90 unidades de ancho/alto. La escala real debe comprobarse en un teléfono; podés cambiar el valor scale en index.html.
+- No se requiere una app extra para la vista 3D en el navegador. Algunas rutas de AR pueden apoyarse en componentes del sistema del teléfono.
