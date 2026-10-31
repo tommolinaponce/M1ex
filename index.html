@@ -13,68 +13,63 @@
     body {
       background: radial-gradient(circle at 50% 40%, #24364d, #0b1220 72%);
       color: #f4f7fb;
-      display: flex; align-items: center; justify-content: center;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
       text-align: center; padding: 24px;
     }
     h1 { font-size: clamp(1.4rem, 5vw, 2rem); margin: 0 0 8px; }
-    p { color: #cbd5e1; line-height: 1.5; margin: 0 0 24px; }
+    p { color: #cbd5e1; margin: 0 0 16px; }
+    model-viewer {
+      width: 100%; max-width: 360px; height: 280px;
+      --poster-color: transparent;
+      pointer-events: none; /* sin giro ni zoom en la vista previa */
+    }
     #ar-btn {
       border: 0; border-radius: 999px; padding: 18px 32px;
       background: #e2e8f0; color: #0f172a;
       font-size: 1.1rem; font-weight: 700; cursor: pointer;
+      margin-top: 12px;
     }
     #ar-btn:disabled { opacity: .5; cursor: default; }
-    #status { margin-top: 18px; font-size: .9rem; color: #b8c7d9; min-height: 1.4em; }
-
-    /* El model-viewer queda oculto: solo se usa para lanzar el AR */
-    model-viewer {
-      position: absolute; width: 1px; height: 1px;
-      opacity: 0; pointer-events: none;
-    }
+    #status { margin-top: 14px; font-size: .9rem; color: #b8c7d9; min-height: 1.4em; }
   </style>
 </head>
 <body>
-  <main>
-    <h1>M1ex — modelo molecular</h1>
-    <p>Tocá el botón para ver la molécula en realidad aumentada.</p>
-    <button id="ar-btn" disabled>Ver en AR</button>
-    <div id="status" role="status">Cargando el modelo…</div>
-  </main>
+  <h1>M1ex — modelo molecular</h1>
+  <p>Tocá el botón para verlo en realidad aumentada.</p>
 
   <model-viewer
     id="molecule"
     src="./molecula.glb"
     alt="Modelo molecular M1ex"
     ar
-    ar-modes="scene-viewer quick-look webxr"
+    ar-modes="webxr scene-viewer quick-look"
     ar-placement="floor"
     ar-scale="auto"
     scale="0.003 0.003 0.003"
-    loading="eager">
+    shadow-intensity="0.7"
+    environment-image="neutral"
+    loading="eager"
+    reveal="auto">
+    <button slot="ar-button" id="ar-btn">Ver en AR</button>
   </model-viewer>
+
+  <div id="status" role="status">Cargando el modelo…</div>
 
   <script>
     const viewer = document.querySelector('#molecule');
-    const btn = document.querySelector('#ar-btn');
     const status = document.querySelector('#status');
 
-    viewer.addEventListener('load', async () => {
-      if (!viewer.canActivateAR) {
-        status.textContent = 'Este dispositivo no admite AR. Probá con Safari (iPhone) o Chrome (Android).';
-        return;
-      }
-      btn.disabled = false;
-      status.textContent = 'Listo.';
-
-      // Intento de apertura automática (muchos navegadores lo bloquean)
-      try { await viewer.activateAR(); } catch (e) { /* queda el botón */ }
+    viewer.addEventListener('load', () => {
+      status.textContent = viewer.canActivateAR
+        ? 'Listo. Tocá “Ver en AR”.'
+        : 'Este dispositivo o navegador no admite AR. Probá con Chrome (Android) o Safari (iPhone).';
     });
 
-    viewer.addEventListener('error', () => {
-      status.textContent = 'No se pudo cargar el modelo. Verificá que molecula.glb esté junto a index.html.';
+    viewer.addEventListener('error', (e) => {
+      status.textContent = 'No se pudo cargar el modelo (molecula.glb).';
+      console.error(e);
     });
 
-    btn.addEventListener('click', () => viewer.activateAR());
-  </script>
-</body>
-</html>
+    viewer.addEventListener('ar-status', (e) => {
+      if (e.detail.status === 'failed') {
+        status.textContent = 'El AR falló al
