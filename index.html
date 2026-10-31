@@ -72,4 +72,9 @@
 
     viewer.addEventListener('ar-status', (e) => {
       if (e.detail.status === 'failed') {
-        status.textContent = 'El AR falló al
+        status.textContent = 'El AR falló al iniciar. Revisá que ARCore (Android) esté instalado y actualizado.';
+      }
+    });
+  </script>
+</body>
+</html>
