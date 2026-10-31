@@ -1,22 +1,24 @@
-VISOR MOLECULAR 3D + REALIDAD AUMENTADA
+M1ex — PAQUETE ANDROID AR
 
-Contenido:
-- index.html: página del visor.
-- molecula.glb: tu modelo exportado desde ChimeraX.
+Archivos:
+- index.html: página lanzadora que intenta abrir Google Scene Viewer en modo AR preferido.
+- molecula-ar.glb: copia del GLB con escala raíz ajustada para un tamaño de unos 25 cm en su dimensión mayor.
 
-PRUEBA LOCAL
-No abras index.html con doble clic para comprobar el modelo: los navegadores pueden bloquear la carga local del GLB. Publicá ambos archivos juntos en un alojamiento web HTTPS.
+IMPORTANTE:
+1. El modelo y la página deben publicarse en una URL HTTPS pública.
+2. Subí ambos archivos a la misma carpeta de un hosting estático, por ejemplo GitHub Pages.
+3. Abrí la página index.html desde Chrome en un Android compatible con ARCore.
+4. La página intenta abrir Scene Viewer automáticamente; si Chrome lo bloquea, se toca el botón.
+5. Para generar un QR que vaya directamente a Scene Viewer, una vez publicado el GLB, el QR puede contener este formato de enlace:
 
-PUBLICACIÓN GRATUITA CON GITHUB PAGES
-1. Iniciá sesión en GitHub y creá un repositorio nuevo.
-2. Subí index.html y molecula.glb a la raíz del repositorio.
-3. En Settings > Pages, habilitá la publicación desde la rama principal (main), carpeta /(root).
-4. Esperá a que GitHub Pages publique el sitio y abrí la URL HTTPS que te indique.
-5. Probá la página en un celular. En Android, usá Chrome; en iPhone, Safari.
-6. Generá un QR que apunte a la URL publicada.
+intent://arvr.google.com/scene-viewer/1.0?file=URL_PUBLICA_DEL_GLb&mode=ar_preferred#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;end;
 
-NOTAS
-- El visor 3D usa model-viewer desde un CDN, por lo que necesita conexión a Internet.
-- La realidad aumentada depende de la compatibilidad del dispositivo/navegador.
-- Se configuró una escala inicial AR de 0.003 para probar una molécula de aproximadamente 90 unidades de ancho/alto. La escala real debe comprobarse en un teléfono; podés cambiar el valor scale en index.html.
+En ese enlace, reemplazá URL_PUBLICA_DEL_GLb por la URL HTTPS real de molecula-ar.glb (codificada para URL si contiene caracteres especiales).
+
+LIMITACIONES:
+- No se puede crear un QR funcional definitivo hasta tener la URL pública real del modelo.
+- Android debe ser compatible con ARCore y tener Google Play Services for AR disponible.
+- Android/Chrome puede requerir un toque del usuario; el lanzamiento automático no está garantizado.
+- Se usa ar_preferred: si AR no está disponible, Scene Viewer puede ofrecer una vista 3D alternativa.
+
 - No se requiere una app extra para la vista 3D en el navegador. Algunas rutas de AR pueden apoyarse en componentes del sistema del teléfono.
