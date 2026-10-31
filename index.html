@@ -1,39 +1,66 @@
 <!doctype html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>M1ex en realidad aumentada</title>
-<style>
-body{font-family:system-ui,sans-serif;background:#101827;color:#f4f7fb;margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;box-sizing:border-box}
-main{max-width:560px;text-align:center}
-button{font:inherit;font-weight:700;border:0;border-radius:999px;padding:15px 22px;background:#e2e8f0;color:#101827}
-p{line-height:1.5;color:#cbd5e1}
-#status{font-size:.9rem;color:#aabbd0}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <title>M1ex — visor molecular 3D</title>
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js"></script>
+  <style>
+    :root { color-scheme: dark; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #101827; color: #f4f7fb; }
+    main { max-width: 900px; margin: 0 auto; padding: 22px 16px 28px; }
+    h1 { font-size: clamp(1.4rem, 4vw, 2rem); margin: 0 0 8px; }
+    p { color: #cbd5e1; line-height: 1.5; }
+    .viewer-wrap { overflow: hidden; border-radius: 18px; background: radial-gradient(circle at 50% 40%, #24364d, #0b1220 72%); }
+    model-viewer { width: 100%; height: min(68vh, 600px); min-height: 360px; --poster-color: transparent; }
+    .hint { font-size: .92rem; }
+    .status { min-height: 1.4em; font-size: .9rem; color: #b8c7d9; }
+    .ar-note { border: 1px solid #334155; border-radius: 12px; padding: 12px 14px; margin-top: 14px; }
+    .small { font-size: .82rem; color: #9fb0c5; }
+  </style>
 </head>
 <body>
-<main>
-<h1>M1ex · Realidad aumentada</h1>
-<p>Preparando la apertura de la molécula en Google Scene Viewer. Si no se abre automáticamente, tocá el botón.</p>
-<button id="open">Abrir molécula en AR</button>
-<p id="status">La realidad aumentada requiere Android compatible con Google Play Services for AR y un navegador compatible.</p>
-</main>
-<script>
-const modelURL = new URL('./molecula-ar.glb', location.href).href;
-const fallbackURL = location.href;
-const intentURL =
-  'intent://arvr.google.com/scene-viewer/1.0?file=' +
-  encodeURIComponent(modelURL) +
-  '&mode=ar_preferred#Intent;scheme=https;package=com.google.android.googlequicksearchbox;' +
-  'action=android.intent.action.VIEW;S.browser_fallback_url=' +
-  encodeURIComponent(fallbackURL) + ';end;';
-function openAR(){ location.href = intentURL; }
-document.getElementById('open').addEventListener('click', openAR);
-// Attempt direct launch. Some browsers require the explicit button tap.
-setTimeout(() => { document.getElementById('status').textContent =
-  'Si seguís viendo esta página, tocá “Abrir molécula en AR”.'; }, 1800);
-try { openAR(); } catch(e) {}
-</script>
+  <main>
+    <h1>M1ex — modelo molecular 3D</h1>
+    <p>Arrastrá para girar el modelo y usá dos dedos para acercar o alejar. En un celular compatible, tocá el botón de realidad aumentada para colocarlo en el entorno real.</p>
+    <div class="viewer-wrap">
+      <model-viewer
+        id="molecule"
+        src="./molecula.glb"
+        alt="Modelo molecular M1ex exportado desde ChimeraX"
+        camera-controls
+        auto-rotate
+        rotation-per-second="18deg"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        ar-placement="floor"
+        ar-scale="auto"
+        scale="0.003 0.003 0.003"
+        shadow-intensity="0.7"
+        exposure="1"
+        environment-image="neutral"
+        interaction-prompt="auto"
+        loading="eager">
+        <div slot="progress-bar" style="height:4px;background:#64748b"></div>
+        <button slot="ar-button" style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);border:0;border-radius:999px;padding:12px 18px;background:#e2e8f0;color:#0f172a;font-weight:700;white-space:nowrap;">
+          Ver en mi espacio (AR)
+        </button>
+      </model-viewer>
+    </div>
+    <p id="status" class="status" role="status">Cargando el modelo…</p>
+    <div class="ar-note">
+      <strong>Realidad aumentada</strong>
+      <p class="hint">Si no aparece el botón de AR, probá abrir esta página directamente en Safari (iPhone) o Chrome (Android) y comprobá que el dispositivo admita AR. La vista 3D normal seguirá disponible.</p>
+    </div>
+    <p class="small">Modelo preparado para demostración. La escala inicial de AR es aproximada; ajustala tras probarla en el dispositivo de destino. La apariencia de la estructura depende de los datos incluidos en el GLB original.</p>
+  </main>
+  <script>
+    const viewer = document.querySelector('#molecule');
+    const status = document.querySelector('#status');
+    viewer.addEventListener('load', () => { status.textContent = 'Modelo cargado. Girá y ampliá con los dedos.'; });
+    viewer.addEventListener('error', () => { status.textContent = 'No se pudo cargar el modelo. Verificá que molecula.glb esté junto a index.html y que tengas conexión a Internet.'; });
+  </script>
 </body>
 </html>
