@@ -20,5 +20,3 @@ LIMITACIONES:
 - Android debe ser compatible con ARCore y tener Google Play Services for AR disponible.
 - Android/Chrome puede requerir un toque del usuario; el lanzamiento automático no está garantizado.
 - Se usa ar_preferred: si AR no está disponible, Scene Viewer puede ofrecer una vista 3D alternativa.
-
-- No se requiere una app extra para la vista 3D en el navegador. Algunas rutas de AR pueden apoyarse en componentes del sistema del teléfono.
